@@ -1,8 +1,5 @@
 use bevy::{
-    ecs::{
-        component::ComponentId,
-        world::DeferredWorld,
-    },
+    ecs::{component::ComponentId, world::DeferredWorld},
     prelude::*,
     render::render_resource::{
         Extent3d, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages,
@@ -10,15 +7,41 @@ use bevy::{
 };
 use bevy_dither_post_process::components::DitherPostProcessSettings;
 use bevy_headless_render::components::HeadlessRenderSource;
+use ratatui::style::Style;
+
+// TODO: MULTIPLE WINDOWS (probably behind feature flag)
+// INFO: need abstraction for launching terminal emulators
+//
+// /// Structure to refer to a terminal window entity
+// #[derive(Clone, Debug)]
+// pub enum TerminalWindowRef {
+//     /// Refers to the primary window created by default in the terminal the command is run in
+//     Primary,
+//     /// Direct reference to an terminal window entity
+//     Entity(Entity),
+// }
+//
+// #[derive(Component, Debug)]
+// pub struct TerminalWindow;
+
 
 /// Marker component for terminal display
 #[derive(Component, Debug)]
 #[component(on_add = on_add_terminal_display)]
-pub struct TerminalDisplay(pub u32);
+pub struct TerminalDisplay {
+    /// Level of dithering performed on image
+    pub dither_level: u32,
+    /// Style applied to rendered text
+    pub style: Style,
+}
 
 fn on_add_terminal_display(mut world: DeferredWorld, entity: Entity, _id: ComponentId) {
     let asset_server = world.get_resource::<AssetServer>().unwrap();
-    let dither_level = world.entity(entity).get::<TerminalDisplay>().unwrap().0;
+    let dither_level = world
+        .entity(entity)
+        .get::<TerminalDisplay>()
+        .unwrap()
+        .dither_level;
 
     let terminal_size = crossterm::terminal::size().unwrap();
     let size = Extent3d {
@@ -52,11 +75,13 @@ fn on_add_terminal_display(mut world: DeferredWorld, entity: Entity, _id: Compon
         .commands()
         .entity(entity)
         .insert((headless_render_source, post_process_settings));
-    if let Some(mut camera) =  world.entity_mut(entity).get_mut::<Camera>() {
+    if let Some(mut camera) = world.entity_mut(entity).get_mut::<Camera>() {
         camera.target = image_handle.into();
     } else {
         world.commands().entity(entity).insert(Camera {
             target: image_handle.into(),
+            hdr: true,
+            clear_color: ClearColorConfig::Custom(Color::LinearRgba(LinearRgba::BLACK)),
             ..Default::default()
         });
     }

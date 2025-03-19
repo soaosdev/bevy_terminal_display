@@ -1,0 +1,25 @@
+name: Build
+on: [push]
+
+jobs:
+  Build:
+    env:
+      RUNNER_TOOL_CACHE: /toolcache
+    container: rust:alpine
+    steps:
+      - name: Install node
+        run: apk add nodejs gcc libc-dev pkgconf libx11-dev alsa-lib-dev eudev-dev tar
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Restore cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Build
+        run: cargo build --release

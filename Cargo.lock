@@ -332,7 +332,7 @@ dependencies = [
  "console_error_panic_hook",
  "ctrlc",
  "derive_more 1.0.0",
- "downcast-rs",
+ "downcast-rs 1.2.1",
  "wasm-bindgen",
  "web-sys",
 ]
@@ -359,7 +359,7 @@ dependencies = [
  "crossbeam-channel",
  "derive_more 1.0.0",
  "disqualified",
- "downcast-rs",
+ "downcast-rs 1.2.1",
  "either",
  "futures-io",
  "futures-lite",
@@ -472,8 +472,6 @@ dependencies = [
 [[package]]
 name = "bevy_dither_post_process"
 version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "33f3318ee0fd8667a911def5aedec7c7e4a36b0d4d7c78de6a8be357c1658132"
 dependencies = [
  "bevy",
 ]
@@ -819,7 +817,7 @@ dependencies = [
  "bevy_utils",
  "derive_more 1.0.0",
  "disqualified",
- "downcast-rs",
+ "downcast-rs 1.2.1",
  "erased-serde",
  "glam",
  "serde",
@@ -870,7 +868,7 @@ dependencies = [
  "bytemuck",
  "codespan-reporting",
  "derive_more 1.0.0",
- "downcast-rs",
+ "downcast-rs 1.2.1",
  "encase",
  "futures-lite",
  "image",
@@ -973,7 +971,7 @@ dependencies = [
  "color-eyre",
  "crossbeam-channel",
  "crossterm",
- "downcast-rs",
+ "downcast-rs 2.0.1",
  "leafwing-input-manager",
  "once_cell",
  "ratatui",
@@ -1792,6 +1790,12 @@ name = "downcast-rs"
 version = "1.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "75b325c5dbd37f80359721ad39aca5a29fb04c89279657cffdda8736d0c0b9d2"
+
+[[package]]
+name = "downcast-rs"
+version = "2.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ea8a8b81cacc08888170eef4d13b775126db426d0b348bee9d18c2c1eaf123cf"
 
 [[package]]
 name = "dpi"

@@ -2,16 +2,15 @@ use bevy::{
     prelude::*,
     render::render_resource::{Extent3d, TextureFormat},
 };
-use bevy_headless_render::{components::HeadlessRenderDestination, render_assets::HeadlessRenderSource};
-use crossterm::event::Event;
-use ratatui::{
-    style::Stylize,
-    widgets::{Paragraph, Wrap},
+use bevy_headless_render::{
+    components::HeadlessRenderDestination, render_assets::HeadlessRenderSource,
 };
+use crossterm::event::Event;
+use ratatui::widgets::{Paragraph, Wrap};
 
 use crate::{input::events::TerminalInputEvent, widgets::components::Widget};
 
-use super::resources::Terminal;
+use super::{components::TerminalDisplay, resources::Terminal};
 
 const BRAILLE_CODE_MIN: u16 = 0x2800;
 const BRAILLE_CODE_MAX: u16 = 0x28FF;
@@ -25,11 +24,13 @@ const BRAILLE_DOT_BIT_POSITIONS: [u8; 8] = [0, 1, 2, 6, 3, 4, 5, 7];
 /// Prints out the contents of a render image to the terminal as braille characters
 pub fn print_to_terminal(
     mut terminal: ResMut<Terminal>,
-    image_exports: Query<&HeadlessRenderDestination>,
+    image_exports: Query<(&TerminalDisplay, &HeadlessRenderDestination)>,
     mut widgets: Query<&mut Widget>,
 ) {
-    for image_export in image_exports.iter() {
-        let mut image = image_export
+    let display = image_exports.get_single();
+    let mut output_buffer = Vec::<char>::new();
+    if let Ok((_, image)) = display {
+        let mut image = image
             .0
             .lock()
             .expect("Failed to get lock on output texture");
@@ -44,7 +45,6 @@ pub fn print_to_terminal(
             };
         }
 
-        let mut output_buffer = Vec::<char>::new();
         let width = image.width();
         let height = image.height();
         let data = &image.data;
@@ -64,29 +64,31 @@ pub fn print_to_terminal(
                 output_buffer.push(braille_char(mask));
             }
         }
+    }
 
-        let string = output_buffer.into_iter().collect::<String>();
-        terminal
-            .0
-            .draw(|frame| {
+    let string = output_buffer.into_iter().collect::<String>();
+    terminal
+        .0
+        .draw(|frame| {
+            if !string.is_empty() {
                 frame.render_widget(
                     Paragraph::new(string)
-                        .white()
+                        .style(display.unwrap().0.style)
                         .wrap(Wrap { trim: true }),
                     frame.area(),
                 );
+            }
 
-                let mut active_widgets = widgets
-                    .iter_mut()
-                    .filter(|widget| widget.enabled)
-                    .collect::<Vec<_>>();
-                active_widgets.sort_by(|a, b| a.depth.cmp(&b.depth));
-                for mut widget in active_widgets {
-                    widget.widget.render(frame, frame.area());
-                }
-            })
-            .expect("Failed to draw terminal frame");
-    }
+            let mut active_widgets = widgets
+                .iter_mut()
+                .filter(|widget| widget.enabled)
+                .collect::<Vec<_>>();
+            active_widgets.sort_by(|a, b| a.depth.cmp(&b.depth));
+            for mut widget in active_widgets {
+                widget.widget.render(frame, frame.area());
+            }
+        })
+        .expect("Failed to draw terminal frame");
 }
 
 /// Utility function to convert a u8 into the corresponding braille character
