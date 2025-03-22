@@ -4,7 +4,7 @@ version = "0.7.0"
 edition = "2021"
 license = "0BSD OR MIT OR Apache-2.0"
 description = "A plugin for the Bevy game engine which enables rendering to a terminal using unicode braille characters."
-repository = "https://git.soaos.dev/bevy_terminal_display"
+repository = "https://git.soaos.dev/soaos/bevy_terminal_display"
 
 [dependencies]
 crossbeam-channel = "0.5"
@@ -27,4 +27,4 @@ version = "0.28"
 features = ["serde"]
 
 [dependencies.bevy_dither_post_process]
-git = "https://git.soaos.dev/bevy_dither_post_process"
+git = "https://git.soaos.dev/soaos/bevy_dither_post_process"
