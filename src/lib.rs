@@ -104,12 +104,11 @@ impl Plugin for TerminalDisplayPlugin {
     }
 }
 
-fn restore_terminal() -> Result<(), Box<dyn std::error::Error>>{
-    disable_raw_mode()?;
+fn restore_terminal() {
+    let _ = disable_raw_mode();
     let mut stdout = stdout();
-    stdout.execute(PopKeyboardEnhancementFlags)?
-        .execute(DisableMouseCapture)?
-        .execute(LeaveAlternateScreen)?
-        .flush()?;
-    Ok(())
+    let _ = stdout.execute(PopKeyboardEnhancementFlags).unwrap()
+        .execute(DisableMouseCapture).unwrap()
+        .execute(LeaveAlternateScreen).unwrap()
+        .flush();
 }

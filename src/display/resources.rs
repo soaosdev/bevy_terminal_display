@@ -21,7 +21,7 @@ impl Default for Terminal {
         stdout().execute(EnableMouseCapture).unwrap();
         stdout()
             .execute(PushKeyboardEnhancementFlags(
-                KeyboardEnhancementFlags::REPORT_EVENT_TYPES,
+                KeyboardEnhancementFlags::all(),
             ))
             .unwrap();
         enable_raw_mode().unwrap();

@@ -3,7 +3,6 @@
 [![Crates](https://img.shields.io/crates/v/bevy_terminal_display)](https://crates.io/crates/bevy_terminal_display)
 ![License](https://img.shields.io/badge/license-0BSD%2FMIT%2FApache-blue.svg)
 ![Tag](https://img.shields.io/github/v/tag/exvacuum/bevy_terminal_display)
-[![Docs](https://img.shields.io/website?url=https%3A%2F%2Fexvacuum.github.io%2Fbevy_terminal_display%2F&label=docs)](https://exvacuum.github.io/bevy_terminal_display)
 
 A (very experimental) plugin for the [Bevy](https://bevyengine.org) engine which allows for rendering to a terminal window.
 
@@ -19,7 +18,7 @@ Features Include:
 - Log redirection
 
 ## Screenshots
-![](https://git.exvacuum.dev/bevy_terminal_display/plain/doc/screenshot.png)
+![](https://git.soaos.dev/soaos/bevy_terminal_display/plain/doc/screenshot.png)
 ## Compatibility
 
 | Crate Version | Bevy Version |
@@ -39,7 +38,7 @@ bevy_terminal_display = "0.5"
 ### Using git URL in Cargo.toml
 ```toml
 [dependencies.bevy_terminal_display]
-git = "https://git.exvacuum.dev/bevy_terminal_display"
+git = "https://git.soaos.dev/soaos/bevy_terminal_display"
 ```
 
 ## Example Usage
