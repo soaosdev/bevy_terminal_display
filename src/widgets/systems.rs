@@ -2,17 +2,22 @@ use bevy::prelude::*;
 
 use crate::input::events::TerminalInputEvent;
 
-use super::components::Widget;
+use super::{components::Widget, resources::FocusedWidget};
 
-/// Invokes every enabled widget's `handle_events` methods for each incoming input event
+/// Invokes focused widget's `handle_events` methods for each incoming input event
 pub fn widget_input_handling(
     mut widgets: Query<&mut Widget>,
     mut event_reader: EventReader<TerminalInputEvent>,
     mut commands: Commands,
+    focused_widget: Res<FocusedWidget>,
 ) {
-    for event in event_reader.read() {
-        for mut widget in widgets.iter_mut().filter(|widget| widget.enabled) {
-            widget.widget.handle_events(event, &mut commands);
+    if let Some(entity) = **focused_widget {
+        if let Ok(mut widget) = widgets.get_mut(entity) {
+            if widget.enabled == true {
+                for event in event_reader.read() {
+                    widget.widget.handle_events(event, &mut commands);
+                }
+            }
         }
     }
 }
