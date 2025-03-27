@@ -3,7 +3,7 @@
 //! Bevy plugin which allows a camera to render to a terminal window.
 
 use std::{
-    fs::OpenOptions, io::{stdout, Write}, path::PathBuf, sync::{Arc, Mutex}
+    fs::OpenOptions, io::{stdout, Write}, path::PathBuf,
 };
 
 use bevy::{
@@ -18,7 +18,6 @@ use bevy_headless_render::HeadlessRenderPlugin;
 use color_eyre::config::HookBuilder;
 pub use crossterm;
 use crossterm::{event::{DisableMouseCapture, PopKeyboardEnhancementFlags}, terminal::{disable_raw_mode, LeaveAlternateScreen}, ExecutableCommand};
-use once_cell::sync::Lazy;
 pub use ratatui;
 
 /// Functions and types related to capture and display of world to terminal
@@ -29,8 +28,6 @@ pub mod input;
 
 /// Functions and types related to constructing and rendering TUI widgets
 pub mod widgets;
-
-static LOG_PATH: Lazy<Arc<Mutex<PathBuf>>> = Lazy::new(|| Arc::new(Mutex::new(PathBuf::default())));
 
 /// Plugin providing terminal display functionality
 pub struct TerminalDisplayPlugin {
@@ -48,19 +45,12 @@ impl Default for TerminalDisplayPlugin {
 
 impl Plugin for TerminalDisplayPlugin {
     fn build(&self, app: &mut App) {
-        *LOG_PATH
-            .lock()
-            .expect("Failed to get lock on log path mutex") = self.log_path.clone();
+        let log_path = self.log_path.clone();
         let log_file = OpenOptions::new()
             .write(true)
             .create(true)
             .truncate(true)
-            .open(
-                LOG_PATH
-                    .lock()
-                    .expect("Failed to get lock on log path mutex")
-                    .clone(),
-            )
+            .open(log_path)
             .unwrap();
         let file_layer = tracing_subscriber::fmt::Layer::new()
             .with_writer(log_file)
@@ -100,6 +90,7 @@ impl Plugin for TerminalDisplayPlugin {
         )
         .insert_resource(display::resources::Terminal::default())
         .insert_resource(input::resources::EventQueue::default())
+        .init_resource::<widgets::resources::FocusedWidget>()
         .add_event::<input::events::TerminalInputEvent>();
     }
 }

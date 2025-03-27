@@ -7,8 +7,14 @@ use crate::input::events::TerminalInputEvent;
 /// Components for this module
 pub mod components;
 
+/// Resources for this module
+pub mod resources;
+
 /// Systems for this module
 pub(crate) mod systems;
+
+/// Commands for this module
+pub mod commands;
 
 /// Trait which defines an interface for terminal widgets
 pub trait TerminalWidget: DowncastSync {
