@@ -16,7 +16,7 @@ pub trait TerminalWidgetCommands {
     fn focus_widget(&mut self, widget: Entity);
 }
 
-impl<'w, 's> TerminalWidgetCommands for Commands<'w,'s> {
+impl TerminalWidgetCommands for Commands<'_, '_> {
     fn focus_widget(&mut self, widget: Entity) {
         self.queue(FocusWidgetCommand(widget));
     }

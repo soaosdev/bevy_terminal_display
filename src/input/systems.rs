@@ -7,11 +7,7 @@ use bevy::{
 use crossterm::event::{read, Event, KeyEvent, KeyEventKind, MediaKeyCode, ModifierKeyCode};
 use smol_str::SmolStr;
 
-use super::{
-    components::DummyWindow,
-    events::TerminalInputEvent,
-    resources::EventQueue,
-};
+use super::{components::DummyWindow, events::TerminalInputEvent, resources::EventQueue};
 
 /// Initializes event queue and thread
 pub fn setup_input(mut commands: Commands, event_queue: Res<EventQueue>) {
@@ -294,7 +290,7 @@ fn crossterm_keycode_to_bevy_key(
             35 => Some(BKey::F35),
             _ => None,
         },
-        CKey::Char(c) => Some(BKey::Character(SmolStr::from(c.encode_utf8(&mut [0;4])))),
+        CKey::Char(c) => Some(BKey::Character(SmolStr::from(c.encode_utf8(&mut [0; 4])))),
         CKey::Null => None,
         CKey::Esc => Some(BKey::Escape),
         CKey::CapsLock => Some(BKey::CapsLock),

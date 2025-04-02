@@ -13,7 +13,7 @@ pub fn widget_input_handling(
 ) {
     if let Some(entity) = **focused_widget {
         if let Ok(mut widget) = widgets.get_mut(entity) {
-            if widget.enabled == true {
+            if widget.enabled {
                 for event in event_reader.read() {
                     widget.widget.handle_events(event, &mut commands);
                 }
