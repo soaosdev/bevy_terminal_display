@@ -20,9 +20,7 @@ impl Default for Terminal {
         stdout().execute(EnterAlternateScreen).unwrap();
         stdout().execute(EnableMouseCapture).unwrap();
         stdout()
-            .execute(PushKeyboardEnhancementFlags(
-                KeyboardEnhancementFlags::all(),
-            ))
+            .execute(PushKeyboardEnhancementFlags(KeyboardEnhancementFlags::all()))
             .unwrap();
         enable_raw_mode().unwrap();
         let mut terminal = ratatui::Terminal::new(CrosstermBackend::new(stdout()))

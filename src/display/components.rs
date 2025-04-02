@@ -24,7 +24,6 @@ use ratatui::style::Style;
 // #[derive(Component, Debug)]
 // pub struct TerminalWindow;
 
-
 /// Marker component for terminal display
 #[derive(Component, Debug)]
 #[component(on_add = on_add_terminal_display)]
@@ -69,8 +68,8 @@ fn on_add_terminal_display(mut world: DeferredWorld, entity: Entity, _id: Compon
     image.resize(size);
     let image_handle = asset_server.add(image);
 
-    let headless_render_source = HeadlessRenderSource::new(&asset_server, image_handle.clone());
-    let post_process_settings = DitherPostProcessSettings::new(dither_level, &asset_server);
+    let headless_render_source = HeadlessRenderSource::new(asset_server, image_handle.clone());
+    let post_process_settings = DitherPostProcessSettings::new(dither_level, asset_server);
     world
         .commands()
         .entity(entity)
